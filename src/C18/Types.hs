@@ -1,12 +1,11 @@
 module C18.Types where
 
 
-import qualified Data.Set       as S
-import           Data.XML.Types
+import qualified Data.Set as S
 
 
-data TagStack
+data TagStack a
     = TagStack
-    { stack          :: [Name]
-    , imbalancedTags :: S.Set Name
+    { stack          :: [a]
+    , imbalancedTags :: S.Set a
     } deriving (Eq, Show)
