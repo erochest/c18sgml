@@ -12,8 +12,8 @@ import           C18.Balance
 import           C18.Types
 
 
-deNest :: FilePath -> FilePath -> T.Text -> Script ()
-deNest inputFile outputFile tagName =
+deNest :: FilePath -> FilePath -> S.Set T.Text -> S.Set T.Text -> Script ()
+deNest inputFile outputFile tagNames emptyTags =
     scriptIO . TIO.writeFile outputFile
                  . renderTags
                  . concat
@@ -22,4 +22,4 @@ deNest inputFile outputFile tagName =
                  . parseTags
         =<< scriptIO (TIO.readFile inputFile)
     where
-      trans = DeNestTrans (S.singleton tagName) S.empty
+      trans = DeNestTrans tagNames emptyTags
