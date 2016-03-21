@@ -71,7 +71,9 @@ PAIRS = {
 def tokenize(text):
     """This handles tokenizing and normalizing everything."""
     return [
-        token.lower() for token in nltk.word_tokenize(text) if token.isalnum()
+        token.lower()
+        for token in nltk.wordpunct_tokenize(text)
+        if token.isalnum()
     ]
 
 
@@ -103,6 +105,7 @@ def main():
     # Walk over the poets
     for poet_grp in root.iter('poetgrp'):
         poet_id = poet_grp.find('poet').get('id')
+        print(poet_id)
         hits = []
         by_poet[poet_id] = hits
 
@@ -110,20 +113,20 @@ def main():
         # walk over the lines. for every line...
         for line in lines(poet_grp):
             # tokenize the line and walk over pairs of tokens, for each pair...
-            for pair in pairwise(tokenize(line)):
+            # also keep track of where the pair falls in the line.
+            for i, pair in enumerate(pairwise(tokenize(line))):
                 # check if that pair is in the set of targets
                 if pair in PAIRS:
                     # TODO: Not sure what you want to do here...
-                    hits.append(line)
+                    hits.append((line, i))
 
     for poet, line_list in sorted(by_poet.items()):
         print(poet)
         print('=' * len(poet))
         print()
-        for line in line_list:
-            print(line.strip())
+        for line, i in line_list:
+            print('%6d: %s' % (i, line.strip()))
         print()
-
 
 
 if __name__ == '__main__':
